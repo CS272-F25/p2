@@ -1,0 +1,11 @@
+.navbar-brand {
+    font-family: "Playfair Display", serif;
+}
+
+.nav-link:hover {
+    color: teal;
+}
+
+footer p {
+    color: teal;
+}

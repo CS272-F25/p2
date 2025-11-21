@@ -1,0 +1,1 @@
+This repository contains our redesigned website in CS472. Our team converted our WordPress based site into a static HTML/CSS/JS website.

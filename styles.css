@@ -9,3 +9,7 @@
 footer p {
     color: teal;
 }
+ h1 {
+        font-family: "Playfair Display", serif;
+        color: rgb(113, 4, 42);
+    }

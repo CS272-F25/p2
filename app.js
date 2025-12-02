@@ -28,5 +28,3 @@ window.addEventListener("scroll", () => {
     }
     });
 });
-
-<script src="app.js"></script>

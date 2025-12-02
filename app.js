@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.scrollTo({ top: 0, behavior: "smooth"});
 });
 
-//show or hide button based on scroll position
 window.addEventListener("scroll", () => {
     if (window.scrollY > 300) {
         btn.style.display = "block";
@@ -27,4 +26,37 @@ window.addEventListener("scroll", () => {
         btn.style.display = "none";
     }
     });
+});
+
+const blogPosts = [
+  {
+    title: "3 Can't Miss New York City Staples",
+    image: "images/Dumbo.jpg",
+    excerpt: "From Dumbo to the Battery, NYC's cant miss spots.",
+    link: "posts/nycstaples.html"
+  },
+  {
+    title: "New Movie Releases This Fall",
+    image: "images/downtonfinale.jpg",
+    excerpt: "Downton Abbey, Zootopia, Anniversary and more.",
+    link: "posts/newmovies.html"
+  }
+];
+
+// 2. Render posts
+const container = document.getElementById("blog-posts");
+
+blogPosts.forEach(post => {
+  container.innerHTML += `
+    <div class="col-md-4">
+      <div class="card h-100">
+        <img src="${post.image}" class="card-img-top" alt="${post.title}">
+        <div class="card-body">
+          <h5 class="card-title">${post.title}</h5>
+          <p class="card-text">${post.excerpt}</p>
+          <a href="${post.link}" class="btn btn-dark">Read More</a>
+        </div>
+      </div>
+    </div>
+  `;
 });

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btn.style.right = "40px";
   btn.style.padding = "10px 15px";
   btn.style.display = "none";
-  btn.classList.add("btn", "btn-info");
+  btn.classList.add("btn", "btn-primary");
 
   document.body.appendChild(btn);
 
@@ -42,7 +42,7 @@ const blogPosts = [
   }
 ];
 
-// 2. Render posts
+// blog page content
 const blogContainer = document.getElementById("blog-posts");
 if (blogContainer) {
   blogPosts.forEach(post => {
@@ -61,7 +61,7 @@ if (blogContainer) {
   });
 }
 
-
+// travel page content
 const travelContainer = document.getElementById("travel-container");
 if (travelContainer) {
   const cities = ["Paris", "Tokyo", "New_York_City", "Barcelona", "Sydney", "Palawan"];
@@ -118,5 +118,20 @@ if (travelContainer) {
             });
           });
       });
+  });
+}
+
+// contact page thank you pop-up
+const form = document.getElementById("contact-form");
+if (form) {
+  const thanksCard = document.getElementById("thanks-card");
+  const thanksMessage = document.getElementById("thanks-message");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault(); // fake submission
+    const name = document.getElementById("name").value;
+    thanksMessage.textContent = `We received your email ${name}. We'll get back to you shortly!`;
+    thanksCard.style.display = "block";
+    form.reset();
   });
 }

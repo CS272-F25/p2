@@ -1,63 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mosaic — Blog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
     <link href="styles.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@100;300;400;700&display=swap"
-        rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@100;300;400;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark p-3">
-        <a class="navbar-brand" href="index.html">MOSAIC</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="main-nav">
-            <div class="navbar-nav ms-auto text-end">
-                <a class="nav-item nav-link" href="index.html">Home</a>
-                <a class="nav-item nav-link" href="fashion-beauty.html">Fashion &amp; Beauty</a>
-                <a class="nav-item nav-link" href="travel.html">Travel</a>
-                <a class="nav-item nav-link" href="food-drink.html">Food &amp; Drink</a>
-                <a class="nav-item nav-link" href="culture-entertainment.html">Culture &amp; Entertainment</a>
-                <a class="nav-item nav-link active" href="#">Blog</a>
-                <a class="nav-item nav-link" href="contact.html">Contact</a>
-            </div>
+      <a class="navbar-brand" href="index.html">MOSAIC</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#main-nav"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="main-nav">
+        <div class="navbar-nav ms-auto text-end">
+          <a class="nav-item nav-link" href="index.html">Home</a>
+          <a class="nav-item nav-link" href="fashion-beauty.html">Fashion &amp; Beauty</a>
+          <a class="nav-item nav-link" href="travel.html">Travel</a>
+          <a class="nav-item nav-link" href="food-drink.html">Food &amp; Drink</a>
+          <a class="nav-item nav-link" href="culture-entertainment.html"
+            >Culture &amp; Entertainment</a
+          >
+          <a class="nav-item nav-link active" href="#">Blog</a>
+          <a class="nav-item nav-link" href="contact.html">Contact</a>
         </div>
+      </div>
     </nav>
 
     <main class="mt-5 p-5">
-        <div class="container">
-            <h1 class="mb-4 text-center">Read the latest from Mosaic</h1>
-            <div class="row g-4" id="blog-posts"></div>
+      <div class="container">
+        <h1 class="mb-4 text-center">Read the Latest from Mosaic</h1>
+        <div class="row mb-2">
+          <div class="col d-flex justify-content-between">
+            <h2>Blog Posts</h2>
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-primary dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
+                Filter
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" id="travel-filter">Travel</a>
+                <a class="dropdown-item" href="#" id="entertainment-filter">Entertainment</a>
+                <a class="dropdown-item" href="#" id="fashion-filter">Fashion</a>
+                <a class="dropdown-item" href="#" id="clear-filter">Clear</a>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="row g-4" id="blog-posts"></div>
+      </div>
     </main>
 
     <footer class="bg-dark text-light px-5 py-4">
-        <div class="row">
-            <div class="col-8 col-md-4 mb-3">
-                <h5>Find Us</h5>
-                <p>
-                    <strong>Address</strong><br />
-                    1500 Broadway<br />New York, NY 10036 <br /><br />
-                    <strong>Hours</strong><br />
-                    Monday&mdash;Friday: 9:00AM&mdash;5:00PM<br />Saturday &amp; Sunday:
-                    11:00AM&mdash;3:00PM
-                </p>
-            </div>
-            <div class="col-8 col-md-4 mb-3">
-                <h5>About This Site</h5>
-                <p>A modern mosaic of stories &mdash; where fashion, food, and culture come together.</p>
-            </div>
+      <div class="row">
+        <div class="col-8 col-md-4 mb-3">
+          <h5>Find Us</h5>
+          <p>
+            <strong>Address</strong><br />
+            1500 Broadway<br />New York, NY 10036 <br /><br />
+            <strong>Hours</strong><br />
+            Monday&mdash;Friday: 9:00AM&mdash;5:00PM<br />Saturday &amp; Sunday:
+            11:00AM&mdash;3:00PM
+          </p>
         </div>
+        <div class="col-8 col-md-4 mb-3">
+          <h5>About This Site</h5>
+          <p>A modern mosaic of stories &mdash; where fashion, food, and culture come together.</p>
+        </div>
+      </div>
     </footer>
     <script src="app.js"></script>
-</body>
-
+  </body>
 </html>

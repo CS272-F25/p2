@@ -47,32 +47,33 @@ const blogPosts = [
 // blog page content
 const blogContainer = document.getElementById("blog-posts");
 if (blogContainer) {
+  // update displayed posts based on selected filter, if any
   const travelFilter = document.getElementById("travel-filter");
   const entertainmentFilter = document.getElementById("entertainment-filter");
   const fashionFilter = document.getElementById("fashion-filter");
   const clearFilter = document.getElementById("clear-filter");
 
-  travelFilter.addEventListener("click", () => filterAndRender("travel"));
-  entertainmentFilter.addEventListener("click", () => filterAndRender("entertainment"));
-  fashionFilter.addEventListener("click", () => filterAndRender("fashion"));
-  clearFilter.addEventListener("click", () => renderPosts(blogPosts));
+  travelFilter.addEventListener("click", () => filterAndRender(blogContainer, "travel"));
+  entertainmentFilter.addEventListener("click", () => filterAndRender(blogContainer, "entertainment"));
+  fashionFilter.addEventListener("click", () => filterAndRender(blogContainer, "fashion"));
+  clearFilter.addEventListener("click", () => renderPosts(blogContainer, blogPosts));
 
-  // initial render (no filter or page refresh)
+  // initial render (page refresh or no filter)
   const blogPostsToDisplay = JSON.parse(sessionStorage.getItem("posts")) ?? blogPosts;
-  renderPosts(blogPostsToDisplay);
+  renderPosts(blogContainer, blogPostsToDisplay);
 }
 
-function renderPosts(posts) {
-  blogContainer.innerHTML = "";
+function renderPosts(container, posts) {
+  container.innerHTML = "";
   if (posts.length === 0) {
-    blogContainer.innerHTML = `
+    container.innerHTML = `
     <div class="col text-center p-5">
       <p class="text-muted">No posts matching current filter</p>
     </div>
   `;
   } else {
     posts.forEach((post) => {
-      blogContainer.innerHTML += `
+      container.innerHTML += `
         <div class="col-md-4">
           <div class="card h-100">
             <img src="${post.image}" class="card-img-top" alt="${post.title}">
@@ -88,34 +89,51 @@ function renderPosts(posts) {
   }
 }
 
-function filterAndRender(category) {
+function filterAndRender(container, category) {
   const filteredPosts = blogPosts.filter((post) => post.category === category);
   sessionStorage.setItem("posts", JSON.stringify(filteredPosts));
-  renderPosts(filteredPosts);
+  renderPosts(container, filteredPosts);
+}
+
+// home page content
+const bgVideo = document.getElementById("hero-video");
+if (bgVideo) {
+  bgVideo.playbackRate = 0.75; // slow down video
+
+  // also on home page, update latest blog posts
+  const latestPostsContainer = document.getElementById("latest-posts");
+  renderPosts(latestPostsContainer, blogPosts);
 }
 
 // travel page content
 const travelContainer = document.getElementById("travel-container");
 if (travelContainer) {
-  const cities = ["Paris", "Tokyo", "New_York_City", "Barcelona", "Sydney", "Palawan"];
+  const cities = ["Paris", "Tokyo", "New_York_City", "Barcelona", "Sydney", "Palawan"]; // multiple words require underscore for API
   cities.forEach((city) => {
+    // API with travel destination info
     const wikivoyageURL = `https://en.wikivoyage.org/w/api.php?action=query&prop=extracts&format=json&titles=${city}&origin=*`;
+    // API with travel destination images
     const wikiImageURL = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=original&titles=${city}&origin=*`;
 
     // travel guide content
     fetch(wikivoyageURL)
       .then((res) => res.json())
       .then((travelData) => {
-        const pageId = Object.keys(travelData.query.pages)[0];
-        const fullText = travelData.query.pages[pageId].extract;
-        const shortText = fullText.split(" ").slice(0, 25).join(" ") + " ...";
+        const page = Object.values(travelData.query.pages)[0]; // data keyed by pageId, not title
+        const fullText = page.extract; // contains HTML
+
+        // get plain text for preview to prevent issues when toggling short and full text
+        const temp = document.createElement("div");
+        temp.innerHTML = fullText;
+        const plainText = temp.textContent || temp.innerText || "";
+        const shortText = plainText.split(" ").slice(0, 25).join(" ") + " ...";
 
         // destination image
         fetch(wikiImageURL)
           .then((res) => res.json())
           .then((imageData) => {
-            const imagePageId = Object.keys(imageData.query.pages)[0];
-            const image = imageData.query.pages[imagePageId].original.source;
+            const imagePage = Object.values(imageData.query.pages)[0];
+            const image = imagePage.original.source;
 
             // card to display
             const card = document.createElement("div");
@@ -125,29 +143,22 @@ if (travelContainer) {
                                 <img src="${image}" class="card-img-top" alt="${city}">
                                 <div class="card-body">
                                     <h2 class="card-title">${city.replace(/_/g, " ")}</h2>
-                                    <p class="card-text short-text">${shortText}</p>
-                                    <div class="card-text full-text d-none">${fullText}</div>
+                                    <p class="card-text">${shortText}</p>
                                     <button class="btn btn-link btn-sm read-more">Read More</button>
                                 </div>
                             </div>
-                        `;
+                        `; // removes underscore in title, if necessary
             travelContainer.appendChild(card);
 
-            // toggle button
+            // toggle read more button
             const btn = card.querySelector(".read-more");
-            const short = card.querySelector(".short-text");
-            const full = card.querySelector(".full-text");
+            const content = card.querySelector(".card-text");
+            let expanded = false;
 
             btn.addEventListener("click", () => {
-              if (full.classList.contains("d-none")) {
-                full.classList.remove("d-none");
-                short.classList.add("d-none");
-                btn.textContent = "Read Less";
-              } else {
-                full.classList.add("d-none");
-                short.classList.remove("d-none");
-                btn.textContent = "Read More";
-              }
+              expanded = !expanded;
+              content.innerHTML = expanded ? fullText : shortText;
+              btn.textContent = expanded ? "Read Less" : "Read More";
             });
           });
       });

@@ -1,62 +1,181 @@
 document.addEventListener("DOMContentLoaded", () => {
-    //create back button
-    const btn = document.createElement("button");
-    btn.id = "back-to-top";
-    btn.textContent = "Top";
-    btn.setAttribute("aria-label", "Back to top");
-    btn.style.position = "fixed";
-    btn.style.bottom = "40px";
-    btn.style.right = "40px";
-    btn.style.padding = "10px 15px";
-    btn.style.fontSize = "18px";
-    btn.style.display = "none";
-    btn.classList.add("btn", "btn-primary");
+  //create back button
+  const btn = document.createElement("button");
+  btn.id = "back-to-top";
+  btn.textContent = "Back to Top";
+  btn.setAttribute("aria-label", "Back to Top");
+  btn.style.position = "fixed";
+  btn.style.bottom = "40px";
+  btn.style.right = "40px";
+  btn.style.padding = "10px 15px";
+  btn.style.display = "none";
+  btn.classList.add("btn", "btn-primary");
 
-    document.body.appendChild(btn);
+  document.body.appendChild(btn);
 
-    //scroll to top smoothly when clicked
-    btn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth"});
-});
+  //scroll to top smoothly when clicked
+  btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
-window.addEventListener("scroll", () => {
+  window.addEventListener("scroll", () => {
     if (window.scrollY > 300) {
-        btn.style.display = "block";
+      btn.style.display = "block";
     } else {
-        btn.style.display = "none";
+      btn.style.display = "none";
     }
-    });
+  });
 });
 
 const blogPosts = [
   {
     title: "3 Can't Miss New York City Staples",
     image: "images/Dumbo.jpg",
-    excerpt: "From Dumbo to the Battery, NYC's cant miss spots.",
-    link: "posts/nycstaples.html"
+    excerpt: "From Dumbo to the Battery, NYC's can't miss spots.",
+    link: "posts/nycstaples.html",
+    category: "travel",
   },
   {
     title: "New Movie Releases This Fall",
     image: "images/downtonfinale.jpg",
     excerpt: "Downton Abbey, Zootopia, Anniversary and more.",
-    link: "posts/newmovies.html"
-  }
+    link: "posts/newmovies.html",
+    category: "entertainment",
+  },
 ];
 
-// 2. Render posts
-const container = document.getElementById("blog-posts");
+// blog page content
+const blogContainer = document.getElementById("blog-posts");
+if (blogContainer) {
+  // update displayed posts based on selected filter, if any
+  const travelFilter = document.getElementById("travel-filter");
+  const entertainmentFilter = document.getElementById("entertainment-filter");
+  const fashionFilter = document.getElementById("fashion-filter");
+  const clearFilter = document.getElementById("clear-filter");
 
-blogPosts.forEach(post => {
-  container.innerHTML += `
-    <div class="col-md-4">
-      <div class="card h-100">
-        <img src="${post.image}" class="card-img-top" alt="${post.title}">
-        <div class="card-body">
-          <h5 class="card-title">${post.title}</h5>
-          <p class="card-text">${post.excerpt}</p>
-          <a href="${post.link}" class="btn btn-dark">Read More</a>
-        </div>
-      </div>
+  travelFilter.addEventListener("click", () => filterAndRender(blogContainer, "travel"));
+  entertainmentFilter.addEventListener("click", () => filterAndRender(blogContainer, "entertainment"));
+  fashionFilter.addEventListener("click", () => filterAndRender(blogContainer, "fashion"));
+  clearFilter.addEventListener("click", () => renderPosts(blogContainer, blogPosts));
+
+  // initial render (page refresh or no filter)
+  const blogPostsToDisplay = JSON.parse(sessionStorage.getItem("posts")) ?? blogPosts;
+  renderPosts(blogContainer, blogPostsToDisplay);
+}
+
+function renderPosts(container, posts) {
+  container.innerHTML = "";
+  if (posts.length === 0) {
+    container.innerHTML = `
+    <div class="col text-center p-5">
+      <p class="text-muted">No posts matching current filter</p>
     </div>
   `;
-});
+  } else {
+    posts.forEach((post) => {
+      container.innerHTML += `
+        <div class="col-md-4">
+          <div class="card h-100">
+            <img src="${post.image}" class="card-img-top" alt="${post.title}">
+            <div class="card-body">
+              <h5 class="card-title">${post.title}</h5>
+              <p class="card-text">${post.excerpt}</p>
+              <a href="${post.link}" class="btn btn-dark">Read More</a>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+}
+
+function filterAndRender(container, category) {
+  const filteredPosts = blogPosts.filter((post) => post.category === category);
+  sessionStorage.setItem("posts", JSON.stringify(filteredPosts));
+  renderPosts(container, filteredPosts);
+}
+
+// home page content
+const bgVideo = document.getElementById("hero-video");
+if (bgVideo) {
+  bgVideo.playbackRate = 0.75; // slow down video
+
+  // also on home page, update latest blog posts
+  const latestPostsContainer = document.getElementById("latest-posts");
+  renderPosts(latestPostsContainer, blogPosts);
+}
+
+// travel page content
+const travelContainer = document.getElementById("travel-container");
+if (travelContainer) {
+  const cities = ["Paris", "Tokyo", "New_York_City", "Barcelona", "Sydney", "Palawan"]; // multiple words require underscore for API
+  cities.forEach((city) => {
+    // API with travel destination info
+    const wikivoyageURL = `https://en.wikivoyage.org/w/api.php?action=query&prop=extracts&format=json&titles=${city}&origin=*`;
+    // API with travel destination images
+    const wikiImageURL = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=original&titles=${city}&origin=*`;
+
+    // travel guide content
+    fetch(wikivoyageURL)
+      .then((res) => res.json())
+      .then((travelData) => {
+        const page = Object.values(travelData.query.pages)[0]; // data keyed by pageId, not title
+        const fullText = page.extract; // contains HTML
+
+        // get plain text for preview to prevent issues when toggling short and full text
+        const temp = document.createElement("div");
+        temp.innerHTML = fullText;
+        const plainText = temp.textContent || temp.innerText || "";
+        const shortText = plainText.split(" ").slice(0, 25).join(" ") + " ...";
+
+        // destination image
+        fetch(wikiImageURL)
+          .then((res) => res.json())
+          .then((imageData) => {
+            const imagePage = Object.values(imageData.query.pages)[0];
+            const image = imagePage.original.source;
+
+            // card to display
+            const card = document.createElement("div");
+            card.className = "col-md-6 mb-4";
+            card.innerHTML = `
+                            <div class="card h-100 shadow">
+                                <img src="${image}" class="card-img-top" alt="${city}">
+                                <div class="card-body">
+                                    <h2 class="card-title">${city.replace(/_/g, " ")}</h2>
+                                    <p class="card-text">${shortText}</p>
+                                    <button class="btn btn-link btn-sm read-more">Read More</button>
+                                </div>
+                            </div>
+                        `; // removes underscore in title, if necessary
+            travelContainer.appendChild(card);
+
+            // toggle read more button
+            const btn = card.querySelector(".read-more");
+            const content = card.querySelector(".card-text");
+            let expanded = false;
+
+            btn.addEventListener("click", () => {
+              expanded = !expanded;
+              content.innerHTML = expanded ? fullText : shortText;
+              btn.textContent = expanded ? "Read Less" : "Read More";
+            });
+          });
+      });
+  });
+}
+
+// contact page thank you pop-up
+const form = document.getElementById("contact-form");
+if (form) {
+  const thanksCard = document.getElementById("thanks-card");
+  const thanksMessage = document.getElementById("thanks-message");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault(); // fake submission
+    const name = document.getElementById("name").value;
+    thanksMessage.textContent = `We received your email ${name}. We'll get back to you shortly!`;
+    thanksCard.style.display = "block";
+    form.reset();
+  });
+}

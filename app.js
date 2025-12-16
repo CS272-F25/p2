@@ -32,12 +32,14 @@ const blogPosts = [
   {
     title: "3 Can't Miss New York City Staples",
     image: "images/Dumbo.jpg",
+    alt: "View of the Brooklyn Bridge.",
     excerpt: "From Dumbo to the Battery, NYC's cant miss spots.",
     link: "posts/nycstaples.html"
   },
   {
     title: "New Movie Releases This Fall",
     image: "images/downtonfinale.jpg",
+    alt: "Downton Abbey the Finale movie poster.",
     excerpt: "Downton Abbey, Zootopia, Anniversary and more.",
     link: "posts/newmovies.html"
   }
